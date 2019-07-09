@@ -1,0 +1,20 @@
+{
+  "docs": [
+    "cpts is the control points",
+    "the order is as follows: ",
+    " 1. top middle of head",
+    " 2. left eye",
+    " 3. right eye",
+    " 4. bottom middle of nose",
+    " 5. left edge of midheight",
+    " 6. right edge of midheight",
+    " 7. left edge of bottom",
+    " 8. right edge of bottom"
+  ],
+  "animals": [
+    { "file": "animals/580b57fbd9996e24bc43bbfb.png", "cpts": "935,147 669,177 838,273 417,180 602,1045 1329,1075 491,2466  2276,2475" }
+  ],
+  "celebs": [
+    { "file":"celebs/kristen-stewart.png", "cpts": "635,32 565,265 661,263 615,339 219,730 985,787 318,1203 874,1204" }
+  ]
+}
