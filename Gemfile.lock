@@ -1,8 +1,9 @@
 GIT
-  remote: https://github.com/sferik/twitter.git
-  revision: 844818cad07ce490ccb9d8542ebb6b4fc7a61cb4
+  remote: https://github.com/ckolderup/twitter.git
+  revision: 4961b27303b550fc6926613afaa6b2a19be38d6a
+  branch: video-upload-fix
   specs:
-    twitter (6.2.0)
+    twitter (5.15.0)
       addressable (~> 2.3)
       buftok (~> 0.2.0)
       equalizer (~> 0.0.11)
@@ -161,7 +162,7 @@ DEPENDENCIES
   rmagick (~> 2.15.4)
   ruby-opencv (~> 0.0.14)
   squib
-  twitter (~> 6.2.0)!
+  twitter!
   word_wrap
   wordnik
 

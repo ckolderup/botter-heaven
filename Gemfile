@@ -5,7 +5,7 @@ gem 'dotenv'
 gem 'rake', '~> 12.3.2'
 
 # posting methods, used by most bots
-gem 'twitter', '~> 6.2.0', git: 'https://github.com/sferik/twitter.git'
+gem 'twitter', git: 'https://github.com/ckolderup/twitter.git', branch: 'video-upload-fix'
 gem 'mastodon-api', '~> 2.0.0'
 
 # image stuff, used by a number of bots
