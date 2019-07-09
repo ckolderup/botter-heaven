@@ -14,16 +14,6 @@ GIT
       naught (~> 1.0)
       simple_oauth (~> 0.3.0)
 
-GIT
-  remote: https://github.com/tootsuite/mastodon-api
-  revision: 4e75becc834278b3c4f5e9c62ee1b0f7b5cfa0c1
-  specs:
-    mastodon-api (2.0.0)
-      addressable (~> 2.6)
-      buftok (~> 0)
-      http (~> 3.3)
-      oj (~> 3.7)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -82,6 +72,11 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     json (2.2.0)
+    mastodon-api (2.0.0)
+      addressable (~> 2.6)
+      buftok (~> 0)
+      http (~> 3.3)
+      oj (~> 3.7)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     mercenary (0.3.6)
@@ -159,7 +154,7 @@ DEPENDENCIES
   color
   colourlovers
   dotenv
-  mastodon-api (~> 2.0.0)!
+  mastodon-api (~> 2.0.0)
   noun-project-api (~> 0.2.2)
   rake (~> 12.3.2)
   rest-client

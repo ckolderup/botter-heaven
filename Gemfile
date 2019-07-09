@@ -6,7 +6,7 @@ gem 'rake', '~> 12.3.2'
 
 # posting methods, used by most bots
 gem 'twitter', '~> 6.2.0', git: 'https://github.com/sferik/twitter.git'
-gem 'mastodon-api', '~> 2.0.0', git: 'https://github.com/tootsuite/mastodon-api'
+gem 'mastodon-api', '~> 2.0.0'
 
 # image stuff, used by a number of bots
 gem 'rmagick', '~> 2.15.4'
