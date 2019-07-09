@@ -1,0 +1,7 @@
+.env
+.bundle/*
+.DS_Store
+*.sw?
+**tmp/*
+.rbenv-version
+*.un~

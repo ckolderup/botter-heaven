@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  app:
+    build: .
+    volumes:
+      - bundle_cache:/bundle
+      - .:/app
+volumes:
+  bundle_cache:
