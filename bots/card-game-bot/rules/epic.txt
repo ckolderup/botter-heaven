@@ -1,0 +1,6 @@
+Draw a card for each %%same-context%% card you control.
+Everyone moves all cards from their table to their discard pile.
+Everyone discards their hand, then draws three cards.
+Gain two points for each %%same-context%% card you control.
+Gain one point for each %%same-context%% card in play.
+Spend this card: Cancel a card as it's being played.

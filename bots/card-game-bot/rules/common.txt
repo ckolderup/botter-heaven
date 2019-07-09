@@ -1,0 +1,7 @@
+Gain 1 %%same-context%% point when played.
+All opponents lose 1 %%antonym%% point when played.
+Gain 1 point for each %%same-context%% card you control.
+Destroy one %%antonym%% card.
+Draw a card, then discard a card.
+Draw a card.
+You may play one %%same-context%% card this turn in addition to any you've played.
