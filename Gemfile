@@ -21,4 +21,7 @@ gem 'noun-project-api', '~> 0.2.2'
 gem 'word_wrap'
 
 # specific to card game bot
-gem 'squib'
+gem 'squib', git: 'https://github.com/andymeneely/squib', branch: 'master'
+
+# pinning a version of nokogiri that isn't hacked
+gem 'nokogiri', '>= 1.8.5'
