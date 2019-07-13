@@ -7,8 +7,10 @@ require 'color'
 require 'wordnik'
 require 'twitter'
 require 'mastodon'
+require_relative '../../lib/options'
 
 Dotenv.load
+Options.read
 
 NounProjectApi.configure do |config|
   config.public_domain = true
@@ -108,20 +110,24 @@ Squib::Deck.new(layout: 'hand.yml', cards: words.size, width: 850, height: 1150)
   hand
 end
 
-#post to twitter
-media_files = output_paths.map do |filename|
- File.new(filename)
+if Options.get(:twitter)
+  #post to twitter
+  media_files = output_paths.map do |filename|
+  File.new(filename)
+  end
+
+  text = "New cards: #{words.join(', ')}"
+  twitter.update_with_media(text, media_files)
 end
 
-text = "New cards: #{words.join(', ')}"
-twitter.update_with_media(text, media_files)
+if Options.get(:masto)
+  #post to Mastodon
+  masto_media_ids = output_paths.map do |filename|
+    mastodon_client.upload_media(File.new(filename)).id
+  end
 
-#post to Mastodon
-masto_media_ids = output_paths.map do |filename|
-  mastodon_client.upload_media(File.new(filename)).id
+  mastodon_client.create_status(text, media_ids: masto_media_ids)
 end
-
-mastodon_client.create_status(text, media_ids: masto_media_ids)
 
 #cleanup
 words.each do |a_word|

@@ -4,15 +4,17 @@ require 'tempfile'
 require 'rmagick'
 require 'dotenv'
 require 'ostruct'
-include Magick
+require_relative '../../lib/options'
 
+include Magick
 Dotenv.load
+Options.read
 
 def random_text
   ["My desires are... Unconventional",
-    "So show me",
-    "Oh my god",
-    "No way"].sample
+  "So show me",
+  "Oh my god",
+  "No way"].sample
 end
 
 def search_url(query)
@@ -31,12 +33,12 @@ def random_imgur_url
   noun = random_noun
   json = `#{curl_cmd(ENV['IMGUR_CLIENT_ID'], search_url(noun))}`
   response = JSON.parse(json, symbolize_names: true,
-                              object_class: OpenStruct)
+  object_class: OpenStruct)
   sfw_urls = response.data.reject(&:nsfw)
-                          .reject(&:animated)
-                          .select(&:height)
-                          .select { |i| i.height.fdiv(i.width) > 1.2 }
-                          .map(&:link)
+  .reject(&:animated)
+  .select(&:height)
+  .select { |i| i.height.fdiv(i.width) > 1.2 }
+  .map(&:link)
 
   choice = sfw_urls.sample
   puts "#{noun} resulted in #{choice}"
@@ -72,15 +74,18 @@ mastodon_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', b
 text = random_text
 the_image = image(random_imgur_url)
 
-# post to Twitter
-begin
-  tries ||= 5
-  client.update_with_media(text, the_image)
-rescue Twitter::Error => e
-  retry unless (tries -= 1).zero?
+if Options.get(:twitter)
+  # post to Twitter
+  begin
+    tries ||= 5
+    client.update_with_media(text, the_image)
+  rescue Twitter::Error => e
+    retry unless (tries -= 1).zero?
+  end
 end
 
-# post to Mastodon
-media = mastodon_client.upload_media(the_image)
-mastodon_client.create_status(text, media_ids: [media.id])
-
+if Options.get(:masto)
+  # post to Mastodon
+  media = mastodon_client.upload_media(the_image)
+  mastodon_client.create_status(text, media_ids: [media.id])
+end

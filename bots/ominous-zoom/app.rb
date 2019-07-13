@@ -7,24 +7,16 @@ require 'dotenv'
 require 'twitter'
 require 'mastodon'
 require_relative 'wikimedia'
-require 'optparse'
+require_relative '../../lib/options'
 
 include OpenCV
 include Magick
 
 Dotenv.load
+Options.read
 
 class Zoomhance
   def self.run
-    options = {}
-    OptionParser.new do |opts|
-        opts.banner = "Usage: example.rb [options]"
-
-        opts.on("-t", "--tweet", "Tweet instead of printing") do |t|
-            options[:tweet] = true
-        end
-    end.parse!
-
     tries ||= 5
     begin
       path_or_url = ARGV[0]
@@ -57,21 +49,25 @@ class Zoomhance
   end
 
   def self.tweet(image_paths)
-    client = twitter_client
 
     prefix = Array.new(20, '') << '*whispers* ' << '*quietly* ' << '*hissing* ' << '*humming* '
     dorz = Array.new(99, 'z') << 'd'
 
     text = "#{prefix.sample}#{dorz.sample}oo#{'o' * rand(10)}m".send([:upcase, :downcase].sample)
-    #puts text
-    client.update_with_media(text, image_paths.map { |i| File.new(i) })
 
-    masto = masto_client
-    image_ids = image_paths.map do |image_path|
-      masto.upload_media(File.new(image_path)).id
+    if Options.get(:twitter)
+      client = twitter_client
+      client.update_with_media(text, image_paths.map { |i| File.new(i) })
     end
 
-    masto.create_status(text, nil, image_ids)
+    if Options.get(:masto)
+      masto = masto_client
+      image_ids = image_paths.map do |image_path|
+        masto.upload_media(File.new(image_path)).id
+      end
+
+      masto.create_status(text, nil, image_ids)
+    end
   end
 
   def self.generate_video(file,idx)

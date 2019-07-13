@@ -4,9 +4,12 @@ require 'rmagick'
 require 'dotenv'
 require 'ostruct'
 require 'open-uri'
+require_relative '../../lib/options'
+
 include Magick
 
 Dotenv.load
+Options.read
 
 class ImgurError < StandardError; end
 
@@ -75,7 +78,10 @@ begin
   random_imgur_url
   download_mp4(random_imgur_url)
   process_mp4s
-  client.update_with_media(random_text, File.new('/tmp/final-fixed.mp4'))
+
+  if Options.get(:twitter)
+    client.update_with_media(random_text, File.new('/tmp/final-fixed.mp4'))
+  end
 rescue ImgurError, Twitter::Error => e
   puts e.message
   retry unless (tries -= 1).zero?

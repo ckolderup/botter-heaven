@@ -5,8 +5,8 @@ module Options
     OptionParser.new do |opts|
       opts.banner = "Usage: app.rb [options]"
 
-      opts.on("-t", "--tweet", "Post to Twitter") do |t|
-        @options[:tweet] = true
+      opts.on("-t", "--tweet", "--twitter", "Post to Twitter") do |t|
+        @options[:twitter] = true
       end
 
       opts.on("-m", "--masto", "Post to Mastodon") do |m|

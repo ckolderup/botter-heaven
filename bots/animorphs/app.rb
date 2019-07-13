@@ -1,8 +1,10 @@
 require 'json'
 require 'dotenv'
 require 'mastodon'
+require_relative '../../lib/options'
 
 Dotenv.load
+Options.read
 
 mastodon = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTO_ACCESS_TOKEN'])
 
@@ -104,17 +106,19 @@ title = ['The Automation', 'The Generation', 'The Computerization', 'The Mechani
 `convert /tmp/cover_image.png -fill white -undercolor black -font './eurostile_bold.ttf' -pointsize 24 -gravity southeast -annotate -5+100 '#{title}    ' /tmp/missing_author.png`
 `convert /tmp/missing_author.png -fill white -undercolor black -font './eurostile_bold.ttf' -pointsize 24 -gravity southeast -annotate -5+30 'C. Kolderup    ' /tmp/animorphs.jpg`
 
-puts "posting to mastodon..."
+if Options.get(:masto)
+  puts "posting to mastodon..."
 
-begin
-  media = mastodon.upload_media(File.new("/tmp/animorphs.jpg"), description: "The cover of a fictional entry in the Animorphs book series titled '#{title}' by author 'C. Kolderup' where #{celeb['name']} transforms into #{animal['name']}")
+  begin
+    media = mastodon.upload_media(File.new("/tmp/animorphs.jpg"), description: "The cover of a fictional entry in the Animorphs book series titled '#{title}' by author 'C. Kolderup' where #{celeb['name']} transforms into #{animal['name']}")
 
-rescue StandardError => e
-  puts "Exception raised: #{e.inspect}"
-  exit
+  rescue StandardError => e
+    puts "Exception raised: #{e.inspect}"
+    exit
+  end
+
+  puts "media id: #{media.id}"
+  mastodon.create_status('', media_ids: [media.id])
+
+  puts "done!"
 end
-
-puts "media id: #{media.id}"
-mastodon.create_status('', media_ids: [media.id])
-
-puts "done!"

@@ -9,24 +9,16 @@ require 'twitter'
 require 'mastodon'
 require 'word_wrap'
 require 'word_wrap/core_ext'
-require 'optparse'
+require_relative '../../lib/options'
 
 include Magick
 include OpenCV
 
 Dotenv.load
+Options.read
 
 class IllustratedMe
   def self.run
-    options = {}
-    OptionParser.new do |opts|
-        opts.banner = "Usage: app.rb [options]"
-
-        opts.on("-t", "--tweet", "Tweet instead of printing") do |t|
-            options[:tweet] = true
-        end
-    end.parse!
-
     begin
       tries ||= 5
 
@@ -59,13 +51,16 @@ class IllustratedMe
   end
 
   def self.tweet(image_path)
-    client = twitter_client
-    masto = masto_client
+    if Options.get(:twitter)
+      client = twitter_client
+      client.update_with_media('', File.new(image_path))
+    end
 
-    client.update_with_media('', File.new(image_path))
-
-    id = masto.upload_media(File.new(image_path)).id
-    masto.create_status('', media_ids: [id])
+    if Options.get(:masto)
+      masto = masto_client
+      id = masto.upload_media(File.new(image_path)).id
+      masto.create_status('', media_ids: [id])
+    end
   end
 
   def self.generate_image(file, try, local=false)
