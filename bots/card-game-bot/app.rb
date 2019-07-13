@@ -32,15 +32,15 @@ def random_word
 end
 
 def icon_path(word)
-  "tmp/icon-#{word}.png"
+  "/tmp/icon-#{word}.png"
 end
 
 def output_paths
   [
-    './_output/hand.png',
-    './_output/card_00.png',
-    './_output/card_01.png',
-    './_output/card_02.png'
+    '/tmp/hand.png',
+    '/tmp/card_00.png',
+    '/tmp/card_01.png',
+    '/tmp/card_02.png'
   ]
 end
 
