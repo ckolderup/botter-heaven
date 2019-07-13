@@ -4,24 +4,21 @@ require 'mastodon'
 require 'optparse'
 require 'rmagick'
 require 'dotenv'
+
+require_relative '../../lib/options'
+
 include Magick
 
 Dotenv.load
+Options.read
 
-options = {}
-OptionParser.new do |opts|
-    opts.banner = "Usage: example.rb [options]"
+SCUMMFONT = File.join(__dir__, 'scumm.ttf')
 
-    opts.on("-t", "--tweet", "Tweet instead of printing") do |t|
-        options[:tweet] = true
-    end
-end.parse!
-
-@firsts = File.readlines("first.txt")
-@surnames = File.readlines("surname.txt")
-@ranks = File.readlines("rank.txt")
-@departments = File.readlines("department.txt")
-@titles = File.readlines("title.txt")
+@firsts =       File.readlines(File.join(__dir__, "first.txt"))
+@surnames =     File.readlines(File.join(__dir__,"surname.txt"))
+@ranks =        File.readlines(File.join(__dir__, "rank.txt"))
+@departments =  File.readlines(File.join(__dir__, "department.txt"))
+@titles =       File.readlines(File.join(__dir__, "title.txt"))
 
 def computer_company
   company_front = %w[Elec Inter Macro Globo Hyper Infra]
@@ -52,7 +49,7 @@ def image(name, title, company)
   file.rewind
   bin = File.open(file,'r'){ |f| f.read }
   image = Image.from_blob(bin).first
-  palette = Image.read('./palette.png').first
+  palette = Image.read(File.join(__dir__, 'palette.png')).first
   image = image.map(palette)
   append = Image.new(750, 500) do
     self.background_color = 'black'
@@ -68,7 +65,7 @@ def image(name, title, company)
   company_y = 475
 
   draw.annotate(append, text_width, text_height, text_margin, name_y, name) do
-    self.font = './scumm.ttf'
+    self.font = SCUMMFONT
     self.pointsize = 56
     self.fill = 'white'
     self.text_antialias = true
@@ -77,7 +74,7 @@ def image(name, title, company)
   end
 
   draw.annotate(append, text_width, text_height, text_margin, title_y, title) do
-    self.font = './scumm.ttf'
+    self.font = SCUMMFONT
     self.pointsize = 24
     self.fill = 'white'
     self.text_antialias = true
@@ -85,7 +82,7 @@ def image(name, title, company)
   end
 
   draw.annotate(append, text_width, text_height, text_margin, company_y, company) do
-    self.font = './scumm.ttf'
+    self.font = SCUMMFONT
     self.pointsize = 48
     self.fill = 'white'
     self.text_antialias = true
@@ -106,28 +103,27 @@ company = %w[named_firm computer_company dumb acronym]
 @company = nil
 length = 141
 while length > 140 do
-    @name = "#{@firsts.sample.chomp} #{@surnames.sample.chomp}"
-    @title = "#{@ranks.sample.chomp} #{@departments.sample.chomp} #{@titles.sample.chomp}"
-    @company = "#{send(company.sample)}"
-    out = "#{@name}, #{@title} at #{@company}"
-    length = out.length
+  @name = "#{@firsts.sample.chomp} #{@surnames.sample.chomp}"
+  @title = "#{@ranks.sample.chomp} #{@departments.sample.chomp} #{@titles.sample.chomp}"
+  @company = "#{send(company.sample)}"
+  out = "#{@name}, #{@title} at #{@company}"
+  length = out.length
 end
 
 rendered = image(@name, @title, @company)
 
-if options[:tweet] then
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-      config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-      config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-      config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
-    end
-    client.update_with_media(out, rendered)
+if Options.get(:tweet) then
+  client = Twitter::REST::Client.new do |config|
+    config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
+    config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
+    config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
+    config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+  end
+  client.update_with_media(out, rendered)
+end
 
-    masto_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
-    masto_media = masto_client.upload_media(rendered)
-    masto_client.create_status(out, media_ids: [masto_media.id])
-else
-    puts out
-    `cp #{rendered.path} bizman.png`
+if Options.get(:masto) then
+  masto_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
+  masto_media = masto_client.upload_media(rendered)
+  masto_client.create_status(out, media_ids: [masto_media.id])
 end
