@@ -32,15 +32,15 @@ def random_word
 end
 
 def icon_path(word)
-  "tmp/icon-#{word}.png"
+  "/tmp/icon-#{word}.png"
 end
 
 def output_paths
   [
-    './_output/hand.png',
-    './_output/card_00.png',
-    './_output/card_01.png',
-    './_output/card_02.png'
+    '/tmp/hand.png',
+    '/tmp/card_00.png',
+    '/tmp/card_01.png',
+    '/tmp/card_02.png'
   ]
 end
 
@@ -104,8 +104,8 @@ Squib::Deck.new(layout: 'hand.yml', cards: words.size, width: 850, height: 1150)
   text x: 75, y: 475,  width: 700, str: words, font: 'Bookman Antique 24', align: :center, color: text_colors
   text x: 125, y: 750,  width: 600, height: 175, str: rules_texts, font: 'Helvetica Neue 10', align: :center, color: text_colors
 
-  save_png
-  hand
+  save_png(dir: '/tmp')
+  hand(dir: '/tmp')
 end
 
 #post to twitter

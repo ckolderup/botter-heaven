@@ -107,7 +107,7 @@ class Zoomhance
     end
     scale = "#{width}:#{height}"
 
-    out_video_path = "output/output-#{idx}.mp4"
+    out_video_path = "/tmp/output-#{idx}.mp4"
     audio_library_path = 'sounds/21st-of-may'
     audio_path = Dir.glob("#{audio_library_path}/*.mp3").sample
     input = "-i #{file.path}"
@@ -165,7 +165,7 @@ class Zoomhance
 
       new_image = rm_image.crop(offset_x, offset_y, new_width, new_height)
       new_image.resize_to_fit!(original_width, original_height)
-      filename = "output/output-#{try}-#{idx}.jpg"
+      filename = "/tmp/output-#{try}-#{idx}.jpg"
       new_image.write(filename)
       image_paths << filename
 
@@ -182,7 +182,7 @@ class Zoomhance
     rect.fill('transparent')
     rect.rectangle(x, y, x + width, y + height)
     rect.draw(drawn_image)
-    drawn_image.write("output/output-debug-#{suffix}.jpg")
+    drawn_image.write("/tmp/output-debug-#{suffix}.jpg")
   end
 end
 
