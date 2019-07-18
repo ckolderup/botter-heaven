@@ -21,15 +21,7 @@ RUN apt-get install -y libcairo2-dev libgirepository1.0-dev
 #animorphs
 RUN apt-get install -y bc
 
-
 #### end bot-specific dependencies
-
-
-# set up files
-ENV APP_HOME /app
-RUN mkdir -p $APP_HOME
-WORKDIR $APP_HOME
-COPY . .
 
 COPY ./bin/docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
@@ -45,3 +37,9 @@ ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
 ENV PATH="${BUNDLE_BIN}:${PATH}"
 # Bundle installs with binstubs to our custom /bundle/bin volume path.
 # Let system use those stubs.
+# set up files
+ENV APP_HOME /app
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+COPY . .
+
