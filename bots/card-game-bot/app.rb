@@ -7,6 +7,7 @@ require 'color'
 require 'wordnik'
 require 'twitter'
 require 'mastodon'
+require 'discordrb/webhooks'
 require_relative '../../lib/options'
 
 Dotenv.load
@@ -110,13 +111,14 @@ Squib::Deck.new(layout: 'hand.yml', cards: words.size, width: 850, height: 1150)
   hand(dir: '/tmp')
 end
 
+text = "New cards: #{words.join(', ')}"
+
 if Options.get(:twitter)
   #post to twitter
   media_files = output_paths.map do |filename|
   File.new(filename)
   end
 
-  text = "New cards: #{words.join(', ')}"
   twitter.update_with_media(text, media_files)
 end
 
@@ -127,6 +129,18 @@ if Options.get(:masto)
   end
 
   mastodon_client.create_status(text, media_ids: masto_media_ids)
+end
+
+if Options.get(:discord)
+  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client.execute do |builder|
+    builder.content = text
+  end
+  output_paths.each do |filename|
+    client.execute do |builder|
+      builder.file = File.new(filename)
+    end
+  end
 end
 
 #cleanup
