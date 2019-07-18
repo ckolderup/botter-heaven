@@ -1,8 +1,10 @@
+require 'optparse'
+
 module Options
   @options = {}
 
   def self.read
-    OptionParser.new do |opts|
+    ::OptionParser.new do |opts|
       opts.banner = "Usage: app.rb [options]"
 
       opts.on("-t", "--tweet", "--twitter", "Post to Twitter") do |t|

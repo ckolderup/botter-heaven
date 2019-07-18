@@ -4,6 +4,7 @@ require 'rmagick'
 require 'dotenv'
 require 'ostruct'
 require 'open-uri'
+require 'discordrb/webhooks'
 require_relative '../../lib/options'
 
 include Magick
@@ -59,11 +60,11 @@ def process_mp4s
   `#{FFMPEG} -i #{random_intro} -vf "setsar=1:1, scale=640:-1, crop=640:360" -r 30 -aspect 16:9 /tmp/cropped-intro.mp4`
   `#{FFMPEG} -i /tmp/imgur.mp4 -vf "pad=max(iw\\,ih*(16/9)):ow/(16/9):(ow-iw)/2:(oh-ih)/2, setsar=1:1" -s 640x360 -aspect 16:9 -t 20 -r 30 /tmp/cropped.mp4`
   `#{FFMPEG} -i /tmp/cropped-intro.mp4 -i /tmp/cropped.mp4 -filter_complex "[0:v:0] [1:v:0] concat=n=2:v=1 [v]" -map "[v]" /tmp/final.mp4`
-  `#{FFMPEG} -i music.mp3 -i /tmp/final.mp4 -c:v libx264 -pix_fmt yuv420p -profile:v high -c:a aac -profile:a aac_low -shortest -b:v 5000k -b:a 384k -ar 44100 -ac 2 -bf 2 -g 30 /tmp/final-fixed.mp4`
+  `#{FFMPEG} -i music.mp3 -i /tmp/final.mp4 -c:v libx264 -pix_fmt yuv420p -profile:v high -c:a aac -profile:a aac_low -shortest -b:v 5000k -b:a 384k -ar 44100 -ac 2 -bf 2 -g 30 /tmp/playofthegame.mp4`
 end
 
 def cleanup
-  `rm -f /tmp/imgur.mp4 /tmp/cropped-intro.mp4 /tmp/cropped.mp4 /tmp/final.mp4 /tmp/final-fixed.mp4`
+  `rm -f /tmp/imgur.mp4 /tmp/cropped-intro.mp4 /tmp/cropped.mp4 /tmp/final.mp4 /tmp/playofthegame.mp4`
 end
 
 client = Twitter::REST::Client.new do |config|
@@ -80,7 +81,15 @@ begin
   process_mp4s
 
   if Options.get(:twitter)
-    client.update_with_media(random_text, File.new('/tmp/final-fixed.mp4'))
+    client.update_with_media(random_text, File.new('/tmp/playofthegame.mp4'))
+  end
+
+  if Options.get(:discord)
+    client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+    client.execute do |builder|
+      puts `ls -alh /tmp/playofthegame.mp4`
+      builder.file = File.new("/tmp/playofthegame.mp4")
+    end
   end
 rescue ImgurError, Twitter::Error => e
   puts e.message

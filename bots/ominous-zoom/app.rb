@@ -6,6 +6,7 @@ require 'json'
 require 'dotenv'
 require 'twitter'
 require 'mastodon'
+require 'discordrb/webhooks'
 require_relative 'wikimedia'
 require_relative '../../lib/options'
 
@@ -28,7 +29,7 @@ class Zoomhance
       video_paths = [generate_video(file,5-tries)]
       image_paths = generate_images(file,5-tries,true)
       p_distrib = Array.new(75, image_paths) + Array.new(25, video_paths)
-      tweet(p_distrib.shuffle.sample) if options[:tweet]
+      tweet(p_distrib.shuffle.sample)
     rescue StandardError => e
       puts e.message
       retry unless (tries -= 1).zero?
@@ -67,6 +68,15 @@ class Zoomhance
       end
 
       masto.create_status(text, nil, image_ids)
+    end
+
+    if Options.get(:discord)
+      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+      image_paths.each do |path|
+        client.execute do |builder|
+          builder.file = File.new(path)
+        end
+      end
     end
   end
 

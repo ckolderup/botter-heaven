@@ -1,9 +1,11 @@
+require 'tempfile'
 require 'twitter'
 require 'mastodon'
 require 'tempfile'
 require 'rmagick'
 require 'dotenv'
 require 'ostruct'
+require 'discordrb/webhooks'
 require_relative '../../lib/options'
 
 include Magick
@@ -88,4 +90,12 @@ if Options.get(:masto)
   # post to Mastodon
   media = mastodon_client.upload_media(the_image)
   mastodon_client.create_status(text, media_ids: [media.id])
+end
+
+if Options.get(:discord)
+  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client.execute do |builder|
+    `cp #{the_image.path} /tmp/50shades.png`
+    builder.file = File.new("/tmp/50shades.png")
+  end
 end

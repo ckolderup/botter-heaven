@@ -4,6 +4,7 @@ require 'mastodon'
 require 'optparse'
 require 'rmagick'
 require 'dotenv'
+require 'discordrb/webhooks'
 
 require_relative '../../lib/options'
 
@@ -126,4 +127,12 @@ if Options.get(:masto) then
   masto_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
   masto_media = masto_client.upload_media(rendered)
   masto_client.create_status(out, media_ids: [masto_media.id])
+end
+
+if Options.get(:discord) then
+  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client.execute do |builder|
+    `cp #{rendered.path} /tmp/bizman.png`
+    builder.file = File.new("/tmp/bizman.png")
+  end
 end

@@ -1,6 +1,7 @@
 require 'json'
 require 'dotenv'
 require 'mastodon'
+require 'discordrb/webhooks'
 require_relative '../../lib/options'
 
 Dotenv.load
@@ -121,4 +122,11 @@ if Options.get(:masto)
   mastodon.create_status('', media_ids: [media.id])
 
   puts "done!"
+end
+
+if Options.get(:discord)
+  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client.execute do |builder|
+    builder.file = File.new("/tmp/animorphs.jpg")
+  end
 end
