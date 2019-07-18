@@ -57,6 +57,8 @@ GEM
     colourlovers (0.0.1)
       httparty
     concurrent-ruby (1.1.5)
+    discordrb-webhooks (3.3.0)
+      rest-client (>= 2.1.0.rc1)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.4)
@@ -80,6 +82,7 @@ GEM
       http-cookie (~> 1.0)
       http-form_data (~> 2.0)
       http_parser.rb (~> 0.6.0)
+    http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (2.1.1)
@@ -113,14 +116,15 @@ GEM
     noun-project-api (0.2.2)
       oauth (~> 0)
     oauth (0.5.4)
-    oj (3.7.12)
+    oj (3.8.0)
     pango (3.3.6)
       cairo-gobject (= 3.3.6)
       gobject-introspection (= 3.3.6)
     pkg-config (1.3.7)
     public_suffix (3.1.1)
     rake (12.3.2)
-    rest-client (2.0.2)
+    rest-client (2.1.0.rc1)
+      http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
@@ -158,6 +162,7 @@ PLATFORMS
 DEPENDENCIES
   color
   colourlovers
+  discordrb-webhooks (~> 3.3.0)
   dotenv
   mastodon-api (~> 2.0.0)
   nokogiri (>= 1.8.5)
@@ -165,7 +170,7 @@ DEPENDENCIES
   rake (~> 12.3.2)
   rest-client
   rmagick (~> 2.15.4)
-  ruby-opencv (~> 0.0.14)
+  ruby-opencv (~> 0.0.18)
   squib!
   twitter!
   word_wrap

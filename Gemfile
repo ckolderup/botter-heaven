@@ -7,10 +7,11 @@ gem 'rake', '~> 12.3.2'
 # posting methods, used by most bots
 gem 'twitter', git: 'https://github.com/ckolderup/twitter.git', branch: 'video-upload-fix'
 gem 'mastodon-api', '~> 2.0.0'
+gem 'discordrb-webhooks', '~> 3.3.0'
 
 # image stuff, used by a number of bots
 gem 'rmagick', '~> 2.15.4'
-gem 'ruby-opencv', '~> 0.0.14'
+gem 'ruby-opencv', '~> 0.0.18'
 
 # generally useful things
 gem 'rest-client'
