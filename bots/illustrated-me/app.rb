@@ -52,6 +52,13 @@ class IllustratedMe
   end
 
   def self.tweet(image_path)
+    if Options.get(:discord)
+      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+      client.execute do |builder|
+        builder.file = File.new(image_path)
+      end
+    end
+
     if Options.get(:twitter)
       client = twitter_client
       client.update_with_media('', File.new(image_path))
@@ -61,13 +68,6 @@ class IllustratedMe
       masto = masto_client
       id = masto.upload_media(File.new(image_path)).id
       masto.create_status('', media_ids: [id])
-    end
-
-    if Options.get(:discord)
-      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
-      client.execute do |builder|
-        builder.file = File.new(image_path)
-      end
     end
   end
 

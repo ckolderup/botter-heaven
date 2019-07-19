@@ -56,6 +56,15 @@ class Zoomhance
 
     text = "#{prefix.sample}#{dorz.sample}oo#{'o' * rand(10)}m".send([:upcase, :downcase].sample)
 
+    if Options.get(:discord)
+      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+      image_paths.each do |path|
+        client.execute do |builder|
+          builder.file = File.new(path)
+        end
+      end
+    end
+
     if Options.get(:twitter)
       client = twitter_client
       client.update_with_media(text, image_paths.map { |i| File.new(i) })
@@ -68,15 +77,6 @@ class Zoomhance
       end
 
       masto.create_status(text, nil, image_ids)
-    end
-
-    if Options.get(:discord)
-      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
-      image_paths.each do |path|
-        client.execute do |builder|
-          builder.file = File.new(path)
-        end
-      end
     end
   end
 

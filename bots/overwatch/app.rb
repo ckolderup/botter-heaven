@@ -80,16 +80,16 @@ begin
   download_mp4(random_imgur_url)
   process_mp4s
 
-  if Options.get(:twitter)
-    client.update_with_media(random_text, File.new('/tmp/playofthegame.mp4'))
-  end
-
   if Options.get(:discord)
     client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
     client.execute do |builder|
       puts `ls -alh /tmp/playofthegame.mp4`
       builder.file = File.new("/tmp/playofthegame.mp4")
     end
+  end
+
+  if Options.get(:twitter)
+    client.update_with_media(random_text, File.new('/tmp/playofthegame.mp4'))
   end
 rescue ImgurError, Twitter::Error => e
   puts e.message

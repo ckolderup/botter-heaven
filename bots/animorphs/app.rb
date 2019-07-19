@@ -107,6 +107,13 @@ title = ['The Automation', 'The Generation', 'The Computerization', 'The Mechani
 `convert /tmp/cover_image.png -fill white -undercolor black -font './eurostile_bold.ttf' -pointsize 24 -gravity southeast -annotate -5+100 '#{title}    ' /tmp/missing_author.png`
 `convert /tmp/missing_author.png -fill white -undercolor black -font './eurostile_bold.ttf' -pointsize 24 -gravity southeast -annotate -5+30 'C. Kolderup    ' /tmp/animorphs.jpg`
 
+if Options.get(:discord)
+  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client.execute do |builder|
+    builder.file = File.new("/tmp/animorphs.jpg")
+  end
+end
+
 if Options.get(:masto)
   puts "posting to mastodon..."
 
@@ -115,7 +122,6 @@ if Options.get(:masto)
 
   rescue StandardError => e
     puts "Exception raised: #{e.inspect}"
-    exit
   end
 
   puts "media id: #{media.id}"
@@ -124,9 +130,3 @@ if Options.get(:masto)
   puts "done!"
 end
 
-if Options.get(:discord)
-  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
-  client.execute do |builder|
-    builder.file = File.new("/tmp/animorphs.jpg")
-  end
-end
