@@ -1,4 +1,11 @@
 GIT
+  remote: http://github.com/ckolderup/giantbomb.git
+  revision: eb8ae50d6f98846f30123eaba386109c7398fcd9
+  specs:
+    giantbomb (0.5.3)
+      httparty (~> 0)
+
+GIT
   remote: https://github.com/andymeneely/squib
   revision: cfbcdfeeec22ae94c4dd18bfa13c6b27fc350e58
   branch: master
@@ -164,6 +171,7 @@ DEPENDENCIES
   colourlovers
   discordrb-webhooks (~> 3.3.0)
   dotenv
+  giantbomb!
   mastodon-api (~> 2.0.0)
   nokogiri (>= 1.8.5)
   noun-project-api (~> 0.2.2)

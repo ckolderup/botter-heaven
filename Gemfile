@@ -24,5 +24,8 @@ gem 'word_wrap'
 # specific to card game bot
 gem 'squib', git: 'https://github.com/andymeneely/squib', branch: 'master'
 
+# specific to but-with-guns
+gem 'giantbomb', git: 'http://github.com/ckolderup/giantbomb.git'
+
 # pinning a version of nokogiri that isn't hacked
 gem 'nokogiri', '>= 1.8.5'
