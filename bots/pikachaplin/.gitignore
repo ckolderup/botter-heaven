@@ -1,0 +1,3 @@
+# this bot requires a repository of video files from the internet archive.
+# because it's like 1GB of videos, I don't keep them in git.
+mp4s/*
