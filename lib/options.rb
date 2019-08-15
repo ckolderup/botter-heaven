@@ -28,4 +28,8 @@ module Options
   def self.get(sym)
     @options[sym]
   end
+
+  def self.set(sym, val)
+    @options[sym] = val
+  end
 end

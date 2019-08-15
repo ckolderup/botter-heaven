@@ -26,10 +26,11 @@ class Zoomhance
         path_or_url = Wikimedia.fetch_random_image
       end
       file = open(path_or_url)
-      video_paths = [generate_video(file,5-tries)]
+      #video_paths = [generate_video(file,5-tries)]
       image_paths = generate_images(file,5-tries,true)
-      p_distrib = Array.new(75, image_paths) + Array.new(25, video_paths)
-      tweet(p_distrib.shuffle.sample)
+      #p_distrib = Array.new(75, image_paths) + Array.new(25, video_paths)
+      #tweet(p_distrib.shuffle.sample)
+      tweet(image_paths)
     rescue StandardError => e
       puts e.message
       retry unless (tries -= 1).zero?
@@ -63,11 +64,13 @@ class Zoomhance
           builder.file = File.new(path)
         end
       end
+      Options.set(:discord, false)
     end
 
     if Options.get(:twitter)
       client = twitter_client
       client.update_with_media(text, image_paths.map { |i| File.new(i) })
+      Options.set(:twitter, false)
     end
 
     if Options.get(:masto)
@@ -76,7 +79,8 @@ class Zoomhance
         masto.upload_media(File.new(image_path)).id
       end
 
-      masto.create_status(text, nil, image_ids)
+      masto.create_status(text, media_ids: image_ids)
+      Options.set(:masto, false)
     end
   end
 
