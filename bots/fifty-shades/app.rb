@@ -64,7 +64,7 @@ def image(url)
   file
 end
 
-client = Twitter::REST::Client.new do |config|
+twitter_client = Twitter::REST::Client.new do |config|
   config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
   config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
   config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
@@ -77,8 +77,8 @@ text = random_text
 the_image = image(random_imgur_url)
 
 if Options.get(:discord)
-  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
-  client.execute do |builder|
+  discord_client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  discord_client.execute do |builder|
     `cp #{the_image.path} /tmp/50shades.png`
     builder.file = File.new("/tmp/50shades.png")
   end
@@ -88,7 +88,7 @@ if Options.get(:twitter)
   # post to Twitter
   begin
     tries ||= 5
-    client.update_with_media(text, the_image)
+    twitter_client.update_with_media(text, the_image)
   rescue Twitter::Error => e
     retry unless (tries -= 1).zero?
   end
