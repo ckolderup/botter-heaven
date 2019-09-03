@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 
 gem 'dotenv'
 gem 'rake', '~> 12.3.2'
+gem 'irb' # no longer included with ruby 2.6
 
 # posting methods, used by most bots
 gem 'twitter', git: 'https://github.com/ckolderup/twitter.git', branch: 'video-upload-fix'
