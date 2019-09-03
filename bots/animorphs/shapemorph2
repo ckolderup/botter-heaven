@@ -197,8 +197,8 @@ outfile="$3"
 if [ "$cpts1" = "" -a "$cpts2" = "" ]; then
   usage1 "--- NO CONTROL POINTS WERE SPECIFIED ---"
 else
-c1_Arr=`echo $cpts1 | sed 's/[, ][, ]*/ /g; s/ /,/; s/ \([^ ]*\) \([^ ]*\)/ \1,\2/g'`
-c2_Arr=`echo $cpts2 | sed 's/[, ][, ]*/ /g; s/ /,/; s/ \([^ ]*\) \([^ ]*\)/ \1,\2/g'`
+c1_Arr=(`echo $cpts1 | sed 's/[, ][, ]*/ /g; s/ /,/; s/ \([^ ]*\) \([^ ]*\)/ \1,\2/g'`)
+c2_Arr=(`echo $cpts2 | sed 's/[, ][, ]*/ /g; s/ /,/; s/ \([^ ]*\) \([^ ]*\)/ \1,\2/g'`)
 num1=${#c1_Arr[*]}
 num2=${#c2_Arr[*]}
 [ $num1 -ne $num2 ] && usage1 "--- INCONSISTENT NUMBER OF CPTS1 AND CPTS2 ---"

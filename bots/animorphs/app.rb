@@ -24,7 +24,7 @@ def scale_cpts(string, pct)
   cpts.join(' ')
 end
 
-filename = ARGV[0] || 'data.json'
+filename = 'data.json'
 file = File.read(filename)
 data = JSON.parse(file)
 
