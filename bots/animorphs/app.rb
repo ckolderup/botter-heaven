@@ -1,13 +1,13 @@
 require 'json'
 require 'dotenv'
-require 'mastodon'
 require 'discordrb/webhooks'
 require_relative '../../lib/options'
+require_relative '../../lib/mastodon'
 
 Dotenv.load
 Options.read
 
-mastodon = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
 
 FRAMES = 11
 
@@ -115,18 +115,10 @@ if Options.get(:discord)
 end
 
 if Options.get(:masto)
-  puts "posting to mastodon..."
-
-  begin
-    media = mastodon.upload_media(File.new("/tmp/animorphs.jpg"), description: "The cover of a fictional entry in the Animorphs book series titled '#{title}' by author 'C. Kolderup' where #{celeb['name']} transforms into #{animal['name']}")
-
-  rescue StandardError => e
-    puts "Exception raised: #{e.inspect}"
-  end
-
-  puts "media id: #{media.id}"
-  mastodon.create_status('', media_ids: [media.id])
-
-  puts "done!"
+  mastodon.submit(
+    '',
+    [File.new("/tmp/animorphs.jpg")],
+    ["The cover of a fictional entry in the Animorphs book series titled '#{title}' by author 'C. Kolderup' where #{celeb['name']} transforms into #{animal['name']}"]
+  )
 end
 

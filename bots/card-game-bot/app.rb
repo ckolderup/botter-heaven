@@ -6,9 +6,10 @@ require 'colourlovers'
 require 'color'
 require 'wordnik'
 require 'twitter'
-require 'mastodon'
 require 'discordrb/webhooks'
+
 require_relative '../../lib/options'
+require_relative '../../lib/mastodon'
 
 Dotenv.load
 Options.read
@@ -28,7 +29,7 @@ twitter = Twitter::REST::Client.new do |config|
     config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
 end
 
-mastodon_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
+mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
 
 def random_word
   File.readlines('./words.txt').sample.chomp
@@ -123,12 +124,11 @@ if Options.get(:twitter)
 end
 
 if Options.get(:masto)
-  #post to Mastodon
-  masto_media_ids = output_paths.map do |filename|
-    mastodon_client.upload_media(File.new(filename)).id
-  end
-
-  mastodon_client.create_status(text, media_ids: masto_media_ids)
+  mastodon.submit(
+    text,
+    output_paths.map { |f| File.new(f) },
+    Array.new(output_paths.length, '')
+  )
 end
 
 if Options.get(:discord)

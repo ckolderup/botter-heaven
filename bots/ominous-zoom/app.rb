@@ -5,10 +5,11 @@ require 'rest-client'
 require 'json'
 require 'dotenv'
 require 'twitter'
-require 'mastodon'
 require 'discordrb/webhooks'
 require_relative 'wikimedia'
+
 require_relative '../../lib/options'
+require_relative '../../lib/mastodon'
 
 include OpenCV
 include Magick
@@ -47,7 +48,7 @@ class Zoomhance
   end
 
   def self.masto_client
-    Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
+    MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
   end
 
   def self.tweet(image_paths)
@@ -74,12 +75,12 @@ class Zoomhance
     end
 
     if Options.get(:masto)
-      masto = masto_client
-      image_ids = image_paths.map do |image_path|
-        masto.upload_media(File.new(image_path)).id
-      end
-
-      masto.create_status(text, media_ids: image_ids)
+      mastodon = masto_client
+      mastodon.submit(
+        text,
+        image_paths.map { |f| File.new(f) },
+        Array.new(image_paths.length, '')
+      )
       Options.set(:masto, false)
     end
   end

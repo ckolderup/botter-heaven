@@ -1,16 +1,19 @@
 require 'tempfile'
 require 'twitter'
-require 'mastodon'
 require 'tempfile'
 require 'rmagick'
 require 'dotenv'
 require 'ostruct'
 require 'discordrb/webhooks'
+
 require_relative '../../lib/options'
+require_relative '../../lib/mastodon'
 
 include Magick
 Dotenv.load
 Options.read
+
+mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
 
 def random_text
   ["My desires are... Unconventional",
@@ -71,8 +74,6 @@ twitter_client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
 end
 
-mastodon_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
-
 text = random_text
 the_image = image(random_imgur_url)
 
@@ -95,8 +96,9 @@ if Options.get(:twitter)
 end
 
 if Options.get(:masto)
-  # post to Mastodon
-  media = mastodon_client.upload_media(the_image)
-  mastodon_client.create_status(text, media_ids: [media.id])
+  mastodon.submit(
+    text,
+    [the_image],
+    ['']
+  )
 end
-

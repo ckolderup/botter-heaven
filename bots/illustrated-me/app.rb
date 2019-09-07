@@ -6,11 +6,12 @@ require 'json'
 require_relative 'wikimedia'
 require 'dotenv'
 require 'twitter'
-require 'mastodon'
 require 'word_wrap'
 require 'word_wrap/core_ext'
 require 'discordrb/webhooks'
+
 require_relative '../../lib/options'
+require_relative '../../lib/mastodon'
 
 include Magick
 include OpenCV
@@ -48,7 +49,7 @@ class IllustratedMe
   end
 
   def self.masto_client
-    Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
+    MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
   end
 
   def self.tweet(image_path)
@@ -65,9 +66,12 @@ class IllustratedMe
     end
 
     if Options.get(:masto)
-      masto = masto_client
-      id = masto.upload_media(File.new(image_path)).id
-      masto.create_status('', media_ids: [id])
+      mastodon = masto_client
+      mastodon.submit(
+        '',
+        [File.new(image_path)],
+        ['']
+      )
     end
   end
 

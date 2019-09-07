@@ -1,12 +1,12 @@
 require 'tempfile'
 require 'twitter'
-require 'mastodon'
 require 'optparse'
 require 'rmagick'
 require 'dotenv'
 require 'discordrb/webhooks'
 
 require_relative '../../lib/options'
+require_relative '../../lib/mastodon'
 
 include Magick
 
@@ -20,6 +20,8 @@ SCUMMFONT = File.join(__dir__, 'scumm.ttf')
 @ranks =        File.readlines(File.join(__dir__, "rank.txt"))
 @departments =  File.readlines(File.join(__dir__, "department.txt"))
 @titles =       File.readlines(File.join(__dir__, "title.txt"))
+
+mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
 
 def computer_company
   company_front = %w[Elec Inter Macro Globo Hyper Infra]
@@ -123,10 +125,12 @@ if Options.get(:twitter) then
   client.update_with_media(out, rendered)
 end
 
-if Options.get(:masto) then
-  masto_client = Mastodon::REST::Client.new(base_url: 'https://botsin.space', bearer_token: ENV['MASTODON_ACCESS_KEY'])
-  masto_media = masto_client.upload_media(rendered)
-  masto_client.create_status(out, media_ids: [masto_media.id])
+if Options.get(:masto)
+  mastodon.submit(
+    out,
+    [rendered],
+    ['']
+  )
 end
 
 if Options.get(:discord) then
