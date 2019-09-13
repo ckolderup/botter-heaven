@@ -1,0 +1,17 @@
+name: Docker Image CI
+
+on:
+  schedule:
+  - cron: 50 * * * *
+
+jobs:
+  post:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+    - name: Post a thing to discord
+      run: |
+        cd ~/src/botter-heaven
+        docker-compose run --rm -w "/app/bots/$1" app bash -c "bundle exec ruby app.rb businessman-exe --discord
