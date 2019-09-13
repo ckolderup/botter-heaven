@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   schedule:
-  - cron: 50 * * * *
+  - cron: 54 * * * *
 
 jobs:
   post:
@@ -13,5 +13,5 @@ jobs:
     - uses: actions/checkout@v1
     - name: Post a thing to discord
       run: |
-        cd ~/src/botter-heaven
-        docker-compose run --rm -w "/app/bots/$1" app bash -c "bundle exec ruby app.rb businessman-exe --discord
+        docker-compose run --rm -w "/app/bots/$1" \
+        app bash -c "bundle exec ruby app.rb businessman-exe --discord"
