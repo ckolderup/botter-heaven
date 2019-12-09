@@ -145,7 +145,7 @@ GEM
       gdk_pixbuf2 (= 3.3.6)
     ruby-opencv (0.0.18)
     ruby-progressbar (1.10.0)
-    rubyzip (1.2.3)
+    rubyzip (1.3.0)
     simple_oauth (0.3.1)
     thread_safe (0.3.6)
     typhoeus (1.3.1)
