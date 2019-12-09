@@ -56,7 +56,7 @@ def image(url)
   image.change_geometry!('500x') { |c,r,i| i.resize!(c,r) }
 
 
-  template = Image.read("./template.png").first
+  template = Image.read("./peloton-template.png").first
   combined = (ImageList.new << template << image).append(true)
 
   file.write(combined.to_blob)
