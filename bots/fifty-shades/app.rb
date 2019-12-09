@@ -32,18 +32,28 @@ def random_noun
 end
 
 def random_imgur_url
-  noun = random_noun
-  json = `#{curl_cmd(ENV['IMGUR_CLIENT_ID'], search_url(noun))}`
-  response = JSON.parse(json, symbolize_names: true,
-  object_class: OpenStruct)
-  sfw_urls = response.data.reject(&:nsfw)
-  .reject(&:animated)
-  .select(&:height)
-  .select { |i| i.height.fdiv(i.width) > 1.2 }
-  .map(&:link)
+  begin
+    tries ||= 5
+    noun = random_noun
+    json = `#{curl_cmd(ENV['IMGUR_CLIENT_ID'], search_url(noun))}`
+    response = JSON.parse(json, symbolize_names: true,
+      object_class: OpenStruct)
+    sfw_urls = response.data.reject(&:nsfw)
+      .reject(&:animated)
+      .select(&:height)
+      .select { |i| i.height.fdiv(i.width) > 1.2 }
+      .map(&:link)
+    
+    choice = sfw_urls.sample
+    puts "#{noun} resulted in #{choice}"
+    if choice.nil?
+      puts "retrying..."
+      raise StandardError
+    end
+  rescue StandardError => e
+    retry unless (tries -= 1).zero?
+  end
 
-  choice = sfw_urls.sample
-  puts "#{noun} resulted in #{choice}"
   choice
 end
 
