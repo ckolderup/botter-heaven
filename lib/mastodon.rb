@@ -18,3 +18,4 @@ class MastodonPost
 
     mastodon.create_status(text, media_ids: media.map(&:id))
   end
+end
