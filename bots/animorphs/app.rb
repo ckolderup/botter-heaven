@@ -1,13 +1,12 @@
 require 'json'
-require 'dotenv'
 require 'discordrb/webhooks'
 require_relative '../../lib/options'
 require_relative '../../lib/mastodon'
+require_relative '../../lib/env'
 
-Dotenv.load
 Options.read
 
-mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
 
 FRAMES = 11
 
@@ -108,7 +107,7 @@ title = ['The Automation', 'The Generation', 'The Computerization', 'The Mechani
 `convert /tmp/missing_author.png -fill white -undercolor black -font './eurostile_bold.ttf' -pointsize 24 -gravity southeast -annotate -5+30 'C. Kolderup    ' /tmp/animorphs.jpg`
 
 if Options.get(:discord)
-  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
   client.execute do |builder|
     builder.file = File.new("/tmp/animorphs.jpg")
   end

@@ -1,17 +1,17 @@
-name: Docker Image CI
+name: Post
 
 on:
-  schedule:
-  - cron: 
-
+  workflow_dispatch:
+    inputs:
+      bot:
+        required: true
+        default: 'animorphs'
 jobs:
   post:
- 
     runs-on: ubuntu-latest
- 
     steps:
     - uses: actions/checkout@v1
     - name: Post a thing to discord
       run: |
-        docker-compose run --rm -w "/app/bots/$1" \
-        app bash -c "bundle exec ruby app.rb businessman-exe --discord"
+        docker-compose run --rm -w "/app/bots/${{github.event.inputs.bot}}" \
+        app bash -c "bundle exec ruby app.rb --discord"
