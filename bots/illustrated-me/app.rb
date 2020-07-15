@@ -4,7 +4,6 @@ require 'open-uri'
 require 'rest-client'
 require 'json'
 require_relative 'wikimedia'
-require 'dotenv'
 require 'twitter'
 require 'word_wrap'
 require 'word_wrap/core_ext'
@@ -12,11 +11,11 @@ require 'discordrb/webhooks'
 
 require_relative '../../lib/options'
 require_relative '../../lib/mastodon'
+require_relative '../../lib/env'
 
 include Magick
 include OpenCV
 
-Dotenv.load
 Options.read
 
 class IllustratedMe
@@ -41,20 +40,20 @@ class IllustratedMe
 
   def self.twitter_client
     Twitter::REST::Client.new do |config|
-      config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-      config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-      config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-      config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+      config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+      config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+      config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+      config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
     end
   end
 
   def self.masto_client
-    MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
+    MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
   end
 
   def self.tweet(image_path)
     if Options.get(:discord)
-      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+      client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
       client.execute do |builder|
         builder.file = File.new(image_path)
       end

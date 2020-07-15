@@ -1,5 +1,4 @@
 require 'noun-project-api'
-require 'dotenv'
 require 'squib'
 require 'open-uri'
 require 'colourlovers'
@@ -10,8 +9,8 @@ require 'discordrb/webhooks'
 
 require_relative '../../lib/options'
 require_relative '../../lib/mastodon'
+require_relative '../../lib/env'
 
-Dotenv.load
 Options.read
 
 NounProjectApi.configure do |config|
@@ -19,17 +18,17 @@ NounProjectApi.configure do |config|
 end
 
 Wordnik.configure do |config|
-  config.api_key = ENV['WORDNIK_API_KEY']
+  config.api_key = Env['WORDNIK_API_KEY']
 end
 
 twitter = Twitter::REST::Client.new do |config|
-    config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-    config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-    config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-    config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+    config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+    config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+    config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+    config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
 end
 
-mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
 
 def random_word
   File.readlines('./words.txt').sample.chomp
@@ -64,7 +63,7 @@ def epic_rule
   File.readlines('./rules/epic.txt').sample.chomp
 end
 
-icons_finder = NounProjectApi::IconsRetriever.new(ENV['NOUN_PROJECT_TOKEN'], ENV['NOUN_PROJECT_SECRET'])
+icons_finder = NounProjectApi::IconsRetriever.new(Env['NOUN_PROJECT_TOKEN'], Env['NOUN_PROJECT_SECRET'])
 
 words = []
 
@@ -132,7 +131,7 @@ if Options.get(:masto)
 end
 
 if Options.get(:discord)
-  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
   client.execute do |builder|
     builder.content = text
   end

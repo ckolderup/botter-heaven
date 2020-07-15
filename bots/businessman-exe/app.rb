@@ -2,15 +2,14 @@ require 'tempfile'
 require 'twitter'
 require 'optparse'
 require 'rmagick'
-require 'dotenv'
 require 'discordrb/webhooks'
 
 require_relative '../../lib/options'
 require_relative '../../lib/mastodon'
+require_relative '../../lib/env'
 
 include Magick
 
-Dotenv.load
 Options.read
 
 SCUMMFONT = File.join(__dir__, 'scumm.ttf')
@@ -21,7 +20,7 @@ SCUMMFONT = File.join(__dir__, 'scumm.ttf')
 @departments =  File.readlines(File.join(__dir__, "department.txt"))
 @titles =       File.readlines(File.join(__dir__, "title.txt"))
 
-mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
 
 def computer_company
   company_front = %w[Elec Inter Macro Globo Hyper Infra]
@@ -117,10 +116,10 @@ rendered = image(@name, @title, @company)
 
 if Options.get(:twitter) then
   client = Twitter::REST::Client.new do |config|
-    config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-    config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-    config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-    config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+    config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+    config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+    config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+    config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
   end
   client.update_with_media(out, rendered)
 end
@@ -134,7 +133,7 @@ if Options.get(:masto)
 end
 
 if Options.get(:discord) then
-  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
   client.execute do |builder|
     `cp #{rendered.path} /tmp/bizman.png`
     builder.file = File.new("/tmp/bizman.png")

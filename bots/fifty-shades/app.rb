@@ -2,18 +2,17 @@ require 'tempfile'
 require 'twitter'
 require 'tempfile'
 require 'rmagick'
-require 'dotenv'
 require 'ostruct'
 require 'discordrb/webhooks'
 
 require_relative '../../lib/options'
 require_relative '../../lib/mastodon'
+require_relative '../../lib/env'
 
 include Magick
-Dotenv.load
 Options.read
 
-mastodon = MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
 
 def random_text
   ["My desires are... Unconventional",
@@ -38,7 +37,7 @@ def random_imgur_url
   begin
     tries ||= 5
     noun = random_noun
-    json = `#{curl_cmd(ENV['IMGUR_CLIENT_ID'], search_url(noun))}`
+    json = `#{curl_cmd(Env['IMGUR_CLIENT_ID'], search_url(noun))}`
     response = JSON.parse(json, symbolize_names: true,
       object_class: OpenStruct)
     sfw_urls = response.data.reject(&:nsfw)
@@ -46,7 +45,7 @@ def random_imgur_url
       .select(&:height)
       .select { |i| i.height.fdiv(i.width) > 1.2 }
       .map(&:link)
-    
+
     choice = sfw_urls.sample
     puts "#{noun} resulted in #{choice}"
     if choice.nil?
@@ -78,17 +77,17 @@ def image(url)
 end
 
 twitter_client = Twitter::REST::Client.new do |config|
-  config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-  config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-  config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-  config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+  config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+  config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+  config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+  config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
 end
 
 text = random_text
 the_image = image(random_imgur_url)
 
 if Options.get(:discord)
-  discord_client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  discord_client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
   discord_client.execute do |builder|
     `cp #{the_image.path} /tmp/50shades.png`
     builder.file = File.new("/tmp/50shades.png")

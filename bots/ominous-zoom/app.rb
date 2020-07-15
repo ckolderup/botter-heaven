@@ -3,18 +3,17 @@ require 'rmagick'
 require 'open-uri'
 require 'rest-client'
 require 'json'
-require 'dotenv'
 require 'twitter'
 require 'discordrb/webhooks'
 require_relative 'wikimedia'
 
 require_relative '../../lib/options'
 require_relative '../../lib/mastodon'
+require_relative '../../lib/env'
 
 include OpenCV
 include Magick
 
-Dotenv.load
 Options.read
 
 class Zoomhance
@@ -40,15 +39,15 @@ class Zoomhance
 
   def self.twitter_client
     Twitter::REST::Client.new do |config|
-      config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-      config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-      config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-      config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+      config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+      config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+      config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+      config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
     end
   end
 
   def self.masto_client
-    MastodonPost.new('https://botsin.space', ENV['MASTO_ACCESS_TOKEN'])
+    MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
   end
 
   def self.tweet(image_paths)
@@ -59,7 +58,7 @@ class Zoomhance
     text = "#{prefix.sample}#{dorz.sample}oo#{'o' * rand(10)}m".send([:upcase, :downcase].sample)
 
     if Options.get(:discord)
-      client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+      client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
       image_paths.each do |path|
         client.execute do |builder|
           builder.file = File.new(path)

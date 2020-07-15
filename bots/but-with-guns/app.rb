@@ -1,18 +1,17 @@
 require 'giantbomb'
-require 'dotenv'
 require 'twitter'
 require 'rmagick'
 require 'open-uri'
 require 'tempfile'
 require 'discordrb/webhooks'
 require_relative '../../lib/options'
+require_relative '../../lib/env'
 
 include Magick
 
-Dotenv.load
 Options.read
 
-GiantBomb::Api.key(ENV['GIANT_BOMB_API_KEY'])
+GiantBomb::Api.key(Env['GIANT_BOMB_API_KEY'])
 
 def game_name_and_image_url
   images = nil
@@ -28,10 +27,10 @@ def game_name_and_image_url
 end
 
 client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-  config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-  config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-  config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+  config.consumer_key        = Env['TWITTER_CONSUMER_KEY']
+  config.consumer_secret     = Env['TWITTER_CONSUMER_SECRET']
+  config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+  config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
 end
 
 template_options = [
@@ -100,7 +99,7 @@ end
 
 if Options.get(:discord)
   `cp #{new_file.path} /tmp/butwithguns.png`
-  client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
 
   client.execute do |builder|
     builder.content = "#{result[0]} #{template}"

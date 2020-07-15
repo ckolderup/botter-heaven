@@ -1,15 +1,14 @@
 require 'twitter'
 require 'tempfile'
 require 'rmagick'
-require 'dotenv'
 require 'ostruct'
 require 'open-uri'
 require 'discordrb/webhooks'
 require_relative '../../lib/options'
+require_relative '../../lib/env'
 
 include Magick
 
-Dotenv.load
 Options.read
 
 class ImgurError < StandardError; end
@@ -33,7 +32,7 @@ end
 def random_imgur_url
   page = (1..100).to_a.sample
   noun = random_noun
-  json = `#{curl_cmd(ENV['IMGUR_CLIENT_ID'], search_url(noun, page))}`
+  json = `#{curl_cmd(Env['IMGUR_CLIENT_ID'], search_url(noun, page))}`
   response = JSON.parse(json, symbolize_names: true,
                               object_class: OpenStruct)
   sfw_urls = response.data.reject(&:nsfw)
@@ -68,10 +67,10 @@ def cleanup
 end
 
 client = Twitter::REST::Client.new do |config|
-  config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-  config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-  config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-  config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+  config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+  config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+  config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+  config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
 end
 
 begin
@@ -81,7 +80,7 @@ begin
   process_mp4s
 
   if Options.get(:discord)
-    client = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+    client = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
     client.execute do |builder|
       puts `ls -alh /tmp/playofthegame.mp4`
       builder.file = File.new("/tmp/playofthegame.mp4")

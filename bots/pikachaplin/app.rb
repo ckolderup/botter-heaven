@@ -1,19 +1,18 @@
 require 'tempfile'
 require 'twitter'
 require 'rmagick'
-require 'dotenv'
 require 'discordrb/webhooks'
 require_relative '../../lib/options'
+require_relative '../../lib/env'
 include Magick
 
-Dotenv.load
 Options.read
 
 client = Twitter::REST::Client.new do |config|
-  config.consumer_key       = ENV['TWITTER_CONSUMER_KEY']
-  config.consumer_secret    = ENV['TWITTER_CONSUMER_SECRET']
-  config.access_token        = ENV['TWITTER_OAUTH_TOKEN']
-  config.access_token_secret = ENV['TWITTER_OAUTH_SECRET']
+  config.consumer_key       = Env['TWITTER_CONSUMER_KEY']
+  config.consumer_secret    = Env['TWITTER_CONSUMER_SECRET']
+  config.access_token        = Env['TWITTER_OAUTH_TOKEN']
+  config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
 end
 
 def image(text)
@@ -83,7 +82,7 @@ if Options.get(:twitter)
 end
 
 if Options.get(:discord)
-  discord = Discordrb::Webhooks::Client.new(url: ENV['DISCORD_WEBHOOK_URL'])
+  discord = Discordrb::Webhooks::Client.new(url: Env['DISCORD_WEBHOOK_URL'])
   discord.execute do |builder|
     puts `ls -alh /tmp/silent-film.mp4`
     builder.file = File.new("/tmp/silent-film.mp4")
