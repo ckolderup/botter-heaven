@@ -28,7 +28,7 @@ twitter = Twitter::REST::Client.new do |config|
     config.access_token_secret = Env['TWITTER_OAUTH_SECRET']
 end
 
-mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTODON_ACCESS_KEY'])
 
 def random_word
   File.readlines('./words.txt').sample.chomp

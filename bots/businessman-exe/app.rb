@@ -20,7 +20,7 @@ SCUMMFONT = File.join(__dir__, 'scumm.ttf')
 @departments =  File.readlines(File.join(__dir__, "department.txt"))
 @titles =       File.readlines(File.join(__dir__, "title.txt"))
 
-mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTODON_ACCESS_KEY'])
 
 def computer_company
   company_front = %w[Elec Inter Macro Globo Hyper Infra]

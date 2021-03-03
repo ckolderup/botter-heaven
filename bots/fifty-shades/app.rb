@@ -12,7 +12,7 @@ require_relative '../../lib/env'
 include Magick
 Options.read
 
-mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTODON_ACCESS_KEY'])
 
 def random_text
   ["My desires are... Unconventional",

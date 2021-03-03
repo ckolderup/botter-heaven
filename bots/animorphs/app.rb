@@ -6,7 +6,7 @@ require_relative '../../lib/env'
 
 Options.read
 
-mastodon = MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
+mastodon = MastodonPost.new('https://botsin.space', Env['MASTODON_ACCESS_KEY'])
 
 FRAMES = 11
 

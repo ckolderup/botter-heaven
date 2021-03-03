@@ -47,7 +47,7 @@ class Zoomhance
   end
 
   def self.masto_client
-    MastodonPost.new('https://botsin.space', Env['MASTO_ACCESS_TOKEN'])
+    MastodonPost.new('https://botsin.space', Env['MASTODON_ACCESS_KEY'])
   end
 
   def self.tweet(image_paths)

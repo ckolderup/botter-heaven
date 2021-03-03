@@ -10,12 +10,12 @@ class MastodonPost
     media = []
     image_array.each_with_index do |image, i|
       begin
-        media << mastodon.upload_media(File.new(image), description: caption_array[i])
+        media << @mastodon.upload_media(File.new(image), description: caption_array[i])
       rescue StandardError => e
         puts "Exception raised: #{e.inspect}"
       end
     end
 
-    mastodon.create_status(text, media_ids: media.map(&:id))
+    @mastodon.create_status(text, media_ids: media.map(&:id))
   end
 end
