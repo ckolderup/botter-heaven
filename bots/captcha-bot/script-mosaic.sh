@@ -5,7 +5,7 @@ PATH="/usr/bin:$PATH"
 NOUN=$(shuf -n 1 words.txt)
 VERB=$(curl -s https://api.datamuse.com/words\?rel_bgb\=$NOUN\&md\=p | jq '.[] | select(.tags[0]=="v") | .word ' | tr -d \" | awk 'length($0) > 3' | shuf -n 1)
 [ -z "$VERB" ] && VERB=$(curl -s https://api.datamuse.com/words\?rel_bgb\=$NOUN\&md\=p | jq '.[] | select(.tags[0]=="v") | .word ' | tr -d \" | shuf -n 1)
-CONJUGATION=$(wget -qO - http://conjugator.reverso.net/conjugation-english-verb-$VERB.html | sed -n "/>Present\| >Preterite</{s@<[^>]*>@ @g;s/\s\+/ /g;p}" | awk 'match($0, /he\/she\/it (.*) we/, a) { print a[1]}' | cut -f 1 -d " ")
+CONJUGATION=$(wget -qO - http://conjugator.reverso.net/conjugation-english-verb-$VERB.html | sed -n "/>Present\| >Preterite</{s@<[^>]*>@ @g;s/\s\+/ /g;p}" | awk '{ print $8 }')
 
 convert -size 600x200 \
 xc:white \
@@ -24,7 +24,7 @@ xc:white \
 head.png
 
 for i in {1..9}; do
-	curl -sLo grid-$i.jpg https://source.unsplash.com/190x190
+	curl -ksLo grid-$i.jpg https://source.unsplash.com/190x190
 	sleep .5
 done
 

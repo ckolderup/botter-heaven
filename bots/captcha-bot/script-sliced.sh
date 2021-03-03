@@ -5,7 +5,7 @@ PATH="/usr/bin:$PATH"
 NOUN=$(shuf -n 1 words.txt)
 VERB=$(curl -s https://api.datamuse.com/words\?rel_bgb\=$NOUN\&md\=p | jq '.[] | select(.tags[0]=="v") | .word ' | tr -d \" | awk 'length($0) > 3' | shuf -n 1)
 [ -z "$VERB" ] && VERB=$(curl -s https://api.datamuse.com/words\?rel_bgb\=$NOUN\&md\=p | jq '.[] | select(.tags[0]=="v") | .word ' | tr -d \" | shuf -n 1)
-CONJUGATION=$(wget -qO - http://conjugator.reverso.net/conjugation-english-verb-$VERB.html | sed -n "/>Present\| >Preterite</{s@<[^>]*>@ @g;s/\s\+/ /g;p}" | awk 'match($0, /he\/she\/it (.*) we/, a) { print a[1]}' | cut -f 1 -d " ")
+CONJUGATION=$(wget -qO - http://conjugator.reverso.net/conjugation-english-verb-$VERB.html | sed -n "/>Present\| >Preterite</{s@<[^>]*>@ @g;s/\s\+/ /g;p}" | awk '{ print $8 }')
 
 convert -size 600x200 \
 xc:white \
@@ -23,7 +23,7 @@ xc:white \
 -draw "text 40, 140 'Click verify once there are none left.'" \
 head.png
 
-curl -sL https://source.unsplash.com/600x600 | \
+curl -ksL https://source.unsplash.com/600x600 | \
 convert -size 600x600 - \
 -stroke white -strokewidth 3 \
 -draw "line 149,0 149,600" \

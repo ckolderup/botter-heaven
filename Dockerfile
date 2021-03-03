@@ -8,6 +8,9 @@ RUN apt-get update -qq && \
 # add ffmpeg
 RUN apt-get install -y ffmpeg
 
+# add jq
+RUN apt-get install -y jq
+
 # install imagemagick@6 manually
 RUN apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev
 
