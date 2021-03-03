@@ -5,3 +5,7 @@
 **tmp/*
 .rbenv-version
 *.un~
+
+# Too lazy to make the bot clean these up
+bots/captcha-bot/*.jpg
+bots/captcha-bot/*.png
