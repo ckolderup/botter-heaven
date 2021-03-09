@@ -26,11 +26,9 @@ class Zoomhance
         path_or_url = Wikimedia.fetch_random_image
       end
       file = open(path_or_url)
-      #video_paths = [generate_video(file,5-tries)]
-      image_paths = generate_images(file,5-tries,true)
-      #p_distrib = Array.new(75, image_paths) + Array.new(25, video_paths)
-      #tweet(p_distrib.shuffle.sample)
-      tweet(image_paths)
+      p_distrib = Array.new(75, 'generate_images') + Array.new(25, 'generate_video')
+      result = send(p_distrib.shuffle.sample, file, 5-tries)
+      tweet(result)
     rescue StandardError => e
       puts e.message
       retry unless (tries -= 1).zero?
@@ -84,7 +82,7 @@ class Zoomhance
     end
   end
 
-  def self.generate_video(file,idx)
+  def self.generate_video(file,try)
     ipl_image = IplImage::load(file.path)
     rm_image = Image.read(file.path).first
 
@@ -117,7 +115,7 @@ class Zoomhance
     end
     scale = "#{width}:#{height}"
 
-    out_video_path = "/tmp/output-#{idx}.mp4"
+    out_video_path = "/tmp/output-#{try}.mp4"
     audio_library_path = 'sounds/21st-of-may'
     audio_path = Dir.glob("#{audio_library_path}/*.mp3").sample
     input = "-i #{file.path}"
@@ -132,10 +130,11 @@ class Zoomhance
     duration = "-t 10"
     input_map = "-map 0:0 -map 1:0"
     `#{command} #{zoompan} #{duration} #{input_map} #{out_video_path}`
-    out_video_path
+    puts "wrote #{out_video_path}"
+    [out_video_path] # return an array to match the image method
   end
 
-  def self.generate_images(file, try, local=false)
+  def self.generate_images(file, try)
     ipl_image = IplImage::load(file.path)
     rm_image = Image.read(file.path).first
 
@@ -182,6 +181,7 @@ class Zoomhance
       #debug_draw(offset_x, offset_y, offset_x + new_width,
       #           offset_y + new_height, "#{try}-#{idx}")
     end
+    puts "wrote /tmp/output-#{try}-*.jpg"
     image_paths
   end
 

@@ -47,5 +47,5 @@ ENV PATH="${BUNDLE_BIN}:${PATH}"
 # set up files
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
-# COPY . .
+COPY . .
 

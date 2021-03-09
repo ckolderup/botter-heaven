@@ -4,6 +4,6 @@ services:
     build: .
     volumes:
       - bundle_cache:/bundle
-      - .:/app
 volumes:
   bundle_cache:
+  
