@@ -98,6 +98,7 @@
     { "file":"celebs/liam-hemsworth.png",       "cpts": "515,69 510,179 564,174 553,207 353,518 769,528 434,1097 703,1097", "name": "Liam Hemsworth"},
     { "file":"celebs/marily-monroe.png",        "cpts": "513,33 497,96 529,102 511,115 416,358 579,350 326,960 631,970", "name": "Marilyn Monroe"},
     { "file":"celebs/megan-fox.png",            "cpts": "575,16 536,138 588,157 549,186 290,466 736,482 361,1026 709,1029", "name": "Megan Fox"},
+    { "file":"celebs/michael-cera.png",         "cpts": "367,47 352,141 400,135 375,174 265,551 584,558 137,1036 487,1254", "name": "Michael Cera"},
     { "file":"celebs/michael-jackson.png",      "cpts": "397,8 358,110 420,117 385,148 233,404 655,432 178,773 527,771", "name": "Michael Jackson"},
     { "file":"celebs/millie-bobby-brown.png",   "cpts": "405,23 357,149 404,141 380,184 254,402 586,454 307,856 599,854", "name": "Millie Bobby Brown"},
     { "file":"celebs/natalie-portman.png",      "cpts": "639,23 612,117 659,120 629,149 520,440 758,452 514,1155 637,1178", "name": "Natalie Portman"},
