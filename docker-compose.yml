@@ -4,6 +4,8 @@ services:
     build: .
     volumes:
       - bundle_cache:/bundle
+      - ./bots/pikachaplin/mp4s:/app/bots/pikachaplin/mp4s
+      - ./bots/ominous-zoom/sounds:/app/bots/ominous-zoom/sounds
 volumes:
   bundle_cache:
   
