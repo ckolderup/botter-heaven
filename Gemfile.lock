@@ -123,7 +123,7 @@ GEM
       mini_portile2 (~> 2.4.0)
     noun-project-api (0.2.2)
       oauth (~> 0)
-    oauth (0.5.4)
+    oauth (0.5.6)
     oj (3.8.0)
     pango (3.3.6)
       cairo-gobject (= 3.3.6)
