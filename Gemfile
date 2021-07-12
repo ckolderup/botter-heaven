@@ -2,7 +2,7 @@ ruby '~> 2.6.3'
 source 'https://rubygems.org'
 
 gem 'dotenv'
-gem 'rake', '~> 12.3.2'
+gem 'rake', '~> 12.3.3'
 gem 'irb' # no longer included with ruby 2.6
 
 # posting methods, used by most bots
