@@ -8,7 +8,7 @@ gem 'irb' # no longer included with ruby 2.6
 # posting methods, used by most bots
 gem 'twitter', git: 'https://github.com/ckolderup/twitter.git', branch: 'video-upload-fix'
 gem 'mastodon-api', '~> 2.0.0'
-gem 'discordrb-webhooks', '~> 3.3.0'
+gem 'discordrb-webhooks', '~> 3.4.2'
 
 # image stuff, used by a number of bots
 gem 'rmagick', '~> 2.15.4'

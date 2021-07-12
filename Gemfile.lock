@@ -64,8 +64,8 @@ GEM
     colourlovers (0.0.1)
       httparty
     concurrent-ruby (1.1.5)
-    discordrb-webhooks (3.3.0)
-      rest-client (>= 2.1.0.rc1)
+    discordrb-webhooks (3.4.2)
+      rest-client (>= 2.0.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.4)
@@ -170,7 +170,7 @@ PLATFORMS
 DEPENDENCIES
   color
   colourlovers
-  discordrb-webhooks (~> 3.3.0)
+  discordrb-webhooks (~> 3.4.2)
   dotenv
   giantbomb!
   irb
